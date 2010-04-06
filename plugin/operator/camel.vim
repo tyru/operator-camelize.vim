@@ -14,6 +14,7 @@ set cpo&vim
 
 
 call operator#user#define('camel', 'operator#camel#camelize')
+call operator#user#define('uncamel', 'operator#camel#uncamelize')
 
 
 " Restore 'cpoptions' {{{
