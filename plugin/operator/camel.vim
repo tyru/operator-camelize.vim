@@ -13,7 +13,7 @@ set cpo&vim
 " }}}
 
 
-call operator#user#define('camel', 'operator#camel#do')
+call operator#user#define('camel', 'operator#camel#camelize')
 
 
 " Restore 'cpoptions' {{{
