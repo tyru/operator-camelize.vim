@@ -46,6 +46,11 @@ function! s:uncamelize(str) "{{{
     let str = a:str
     let regex = '^[A-Z]\|[a-z]\zs[A-Z]'.'\C'
 
+    if str =~# '^[A-Z]\+$'
+        " Do not treat word as CamelCase whose characters are all capitals.
+        return str
+    endif
+
     while 1
         let offset = match(str, regex)
         let len    = strlen(matchstr(str, regex))
