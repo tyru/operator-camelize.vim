@@ -44,11 +44,13 @@ function! s:uncamelize(str) "{{{
     " return substitute(a:str, '^[A-Z]\|[a-z]\zs[A-Z]'.'\C', '\='_' . tolower(submatch(0))', 'g')
 
     let str = a:str
+    let action = g:operator_uncamelize_all_uppercase_action
     let regex = '^[A-Z]\|[a-z]\zs[A-Z]'.'\C'
 
-    if str =~# '^[A-Z]\+$'
-        " Do not treat word as CamelCase whose characters are all capitals.
+    if str =~# '^[A-Z]\+$' && action ==# 'nop'
         return str
+    elseif str =~# '^[A-Z]\+$' && action ==# 'lowercase'
+        return tolower(str)
     endif
 
     while 1
