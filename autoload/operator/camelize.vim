@@ -31,7 +31,7 @@ function! s:camelize(str) "{{{
     return str
 endfunction "}}}
 
-function! operator#camel#camelize(motion_wiseness) "{{{
+function! operator#camelize#camelize(motion_wiseness) "{{{
     '[,']substitute/\w\+/\=s:camelize(submatch(0))/g
 endfunction "}}}
 
@@ -60,7 +60,7 @@ function! s:uncamelize(str) "{{{
     return str
 endfunction "}}}
 
-function! operator#camel#uncamelize(motion_wiseness) "{{{
+function! operator#camelize#uncamelize(motion_wiseness) "{{{
     '[,']substitute/\w\+/\=s:uncamelize(submatch(0))/g
 endfunction "}}}
 
