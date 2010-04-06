@@ -37,14 +37,14 @@ endfunction "}}}
 
 
 " CamelCase -> camel_case
-function! s:uncamelize(str) "{{{
+function! s:decamelize(str) "{{{
     " NOTE: Nested sub-replace-expression is not recognized...omg
     " (:help sub-replace-expression)
     "
     " return substitute(a:str, '^[A-Z]\|[a-z]\zs[A-Z]'.'\C', '\='_' . tolower(submatch(0))', 'g')
 
     let str = a:str
-    let action = g:operator_uncamelize_all_uppercase_action
+    let action = g:operator_decamelize_all_uppercase_action
     let regex = '^[A-Z]\|[a-z]\zs[A-Z]'.'\C'
 
     if str =~# '^[A-Z]\+$' && action ==# 'nop'
@@ -67,8 +67,8 @@ function! s:uncamelize(str) "{{{
     return str
 endfunction "}}}
 
-function! operator#camelize#uncamelize(motion_wiseness) "{{{
-    '[,']substitute/\w\+/\=s:uncamelize(submatch(0))/g
+function! operator#camelize#decamelize(motion_wiseness) "{{{
+    '[,']substitute/\w\+/\=s:decamelize(submatch(0))/g
 endfunction "}}}
 
 
