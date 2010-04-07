@@ -58,39 +58,57 @@ endfunction "}}}
 function! s:operate_on_word(funcname, motion_wiseness) "{{{
     let [begin, end] = [getpos("'["), getpos("']")]
     let lines = s:get_selected_text(a:motion_wiseness, begin, end)
-    let [firstline_noreplace, lastline_noreplace] = [
-    \   (begin[2] == 1 ? '' : getline(begin[1])[: begin[2] - 2]),
-    \   (end[2] == strlen(getline(end[1])) + 1 ? '' : getline(end[1])[end[2] :])
-    \]
 
-    if len(lines) == 1
-        let [first_line, last_line] = [lines[0], '']
-        let middle_lines = []
-    elseif len(lines) == 2
-        let [first_line, last_line] = [lines[0], lines[-1]]
-        let middle_lines = []
+    if a:motion_wiseness ==# 'char'
+        let [firstline_noreplace, lastline_noreplace] = [
+        \   (begin[2] == 1 ? '' : getline(begin[1])[: begin[2] - 2]),
+        \   (end[2] == strlen(getline(end[1])) + 1 ? '' : getline(end[1])[end[2] :])
+        \]
     else
-        let [first_line, last_line] = [lines[0], lines[-1]]
-        let middle_lines = lines[1:-2]
+        let [firstline_noreplace, lastline_noreplace] = ['', '']
     endif
 
     let pat = '\w\+'
     let sub = '\=' . a:funcname . '(submatch(0))'
     let flags = 'g'
-    " First line
-    if first_line != ''
+
+    if len(lines) == 1
+        let [first_line, last_line] = [lines[0], '']
+        let middle_lines = []
+
+        " First line
+        let line = substitute(first_line, pat, sub, flags)
+        call setline(begin[1], firstline_noreplace . line . lastline_noreplace)
+
+    elseif len(lines) == 2
+        let [first_line, last_line] = [lines[0], lines[-1]]
+
+        " First line
         let line = substitute(first_line, pat, sub, flags)
         call setline(begin[1], firstline_noreplace . line)
-    endif
-    " Middle lines
-    for [line, lnum] in s:zip(middle_lines, (begin[1] + 1 <= end[1] - 1 ? range(begin[1] + 1, end[1] - 1) : []))
-        let line = substitute(line, pat, sub, flags)
-        call setline(lnum, line)
-    endfor
-    " Last line
-    if last_line != ''
+        " Second line
         let line = substitute(last_line, pat, sub, flags)
         call setline(end[1], line . lastline_noreplace)
+
+    elseif len(lines) >= 3
+        let [first_line, last_line] = [lines[0], lines[-1]]
+        let middle_lines = lines[1:-2]
+
+        " First line
+        let line = substitute(first_line, pat, sub, flags)
+        call setline(begin[1], firstline_noreplace . line)
+        " Middle lines
+        let lnums = (begin[1] + 1 <= end[1] - 1 ? range(begin[1] + 1, end[1] - 1) : [])
+        for [line, lnum] in s:zip(middle_lines, lnums)
+            let line = substitute(line, pat, sub, flags)
+            call setline(lnum, line)
+        endfor
+        " Last line
+        let line = substitute(last_line, pat, sub, flags)
+        call setline(end[1], line . lastline_noreplace)
+
+    else
+        echoerr 'internal error'
     endif
 endfunction "}}}
 
