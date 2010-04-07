@@ -8,25 +8,33 @@ set cpo&vim
 
 
 function! s:get_selected_text(motion_wiseness, begin_pos, end_pos) "{{{
+    let [begin_lnum, begin_col] = a:begin_pos[1:2]
+    let [end_lnum  , end_col]   = a:end_pos[1:2]
+
     if a:motion_wiseness ==# 'char'
-        let firstline = [getline(a:begin_pos[1])[a:begin_pos[2] - 1:]]
-        if a:begin_pos[1] == a:end_pos[1]
+        if begin_lnum == end_lnum
+            let firstline = [getline(begin_lnum)[begin_col - 1 : end_col - 1]]
             let lastline = []
         else
-            let lastline = [getline(a:end_pos[1])[:a:end_pos[2] - 1]]
+            let firstline = [getline(begin_lnum)[begin_col - 1 :]]
+            let lastline = [getline(end_lnum)[: end_col - 1]]
         endif
     else
-        let firstline = [getline(a:begin_pos[1])]
-        if a:begin_pos[1] == a:end_pos[1]
+        " 'line' and 'block' are treated as same.
+        if begin_lnum == end_lnum
+            let firstline = [getline(begin_lnum)]
             let lastline = []
         else
-            let lastline  = [getline(a:end_pos[1])]
+            let firstline = [getline(begin_lnum)]
+            let lastline  = [getline(end_lnum)]
         endif
     endif
 
     return
     \   firstline
-    \   + getline(a:begin_pos[1] + 1, a:end_pos[1] - 1)
+    \   + (begin_lnum + 1 <= end_lnum - 1 ?
+    \       getline(begin_lnum + 1, end_lnum - 1)
+    \       : [])
     \   + lastline
 endfunction "}}}
 function! s:zip(list, list2) "{{{
