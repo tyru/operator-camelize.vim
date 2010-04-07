@@ -7,6 +7,48 @@ set cpo&vim
 " }}}
 
 
+function! s:get_selected_text(motion_wiseness, begin_pos, end_pos) "{{{
+    if a:motion_wiseness ==# 'char'
+        let firstline = [getline(a:begin_pos[1])[a:begin_pos[2] - 1:]]
+        if a:begin_pos[1] == a:end_pos[1]
+            let lastline = []
+        else
+            let lastline = [getline(a:end_pos[1])[:a:end_pos[2] - 1]]
+        endif
+    else
+        let firstline = [getline(a:begin_pos[1])]
+        if a:begin_pos[1] == a:end_pos[1]
+            let lastline = []
+        else
+            let lastline  = [getline(a:end_pos[1])]
+        endif
+    endif
+
+    return
+    \   firstline
+    \   + getline(a:begin_pos[1] + 1, a:end_pos[1] - 1)
+    \   + lastline
+endfunction "}}}
+function! s:zip(list, list2) "{{{
+    let ret = []
+    let i = 0
+    while s:has_idx(a:list, i) || s:has_idx(a:list2, i)
+        call add(ret,
+        \   (s:has_idx(a:list, i) ? [a:list[i]] : [])
+        \   + (s:has_idx(a:list2, i) ? [a:list2[i]] : []))
+
+        let i += 1
+    endwhile
+    return ret
+endfunction "}}}
+function! s:has_idx(list, idx) "{{{
+    let idx = a:idx
+    " Support negative index?
+    " let idx = a:idx >= 0 ? a:idx : len(a:list) + a:idx
+    return 0 <= idx && idx < len(a:list)
+endfunction "}}}
+
+
 " snake_case -> SnakeCase
 function! s:camelize_word(word) "{{{
     " NOTE: Nested sub-replace-expression is not recognized...omg
