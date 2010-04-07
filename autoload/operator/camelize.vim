@@ -8,27 +8,27 @@ set cpo&vim
 
 
 " snake_case -> SnakeCase
-function! s:camelize(str) "{{{
+function! s:camelize_word(word) "{{{
     " NOTE: Nested sub-replace-expression is not recognized...omg
     " (:help sub-replace-expression)
     "
-    " return substitute(tolower(a:str), '^[a-z]\|_\zs[a-z]'.'\C', '\=toupper(submatch(0))', 'g')
+    " return substitute(tolower(a:word), '^[a-z]\|_\zs[a-z]'.'\C', '\=toupper(submatch(0))', 'g')
 
-    let str = a:str
+    let word = a:word
     let regex = '^[a-z]\|_[a-z]'.'\C'
 
     while 1
-        let offset = match(str, regex)
-        let len    = strlen(matchstr(str, regex))
+        let offset = match(word, regex)
+        let len    = strlen(matchstr(word, regex))
         if offset ==# -1
             break
         endif
-        let left = offset == 0 ? '' : str[: offset - 1]
-        let middle = str[offset : offset + len - 1]
-        let right  = str[offset + len :]
-        let str = left . toupper(middle[0] == '_' ? middle[1:] : middle) . right
+        let left = offset == 0 ? '' : word[: offset - 1]
+        let middle = word[offset : offset + len - 1]
+        let right  = word[offset + len :]
+        let word = left . toupper(middle[0] == '_' ? middle[1:] : middle) . right
     endwhile
-    return str
+    return word
 endfunction "}}}
 
 function! operator#camelize#camelize(motion_wiseness) "{{{
@@ -37,38 +37,38 @@ endfunction "}}}
 
 
 " CamelCase -> camel_case
-function! s:decamelize(str) "{{{
+function! s:decamelize_word(word) "{{{
     " NOTE: Nested sub-replace-expression is not recognized...omg
     " (:help sub-replace-expression)
     "
-    " return substitute(a:str, '^[A-Z]\|[a-z]\zs[A-Z]'.'\C', '\='_' . tolower(submatch(0))', 'g')
+    " return substitute(a:word, '^[A-Z]\|[a-z]\zs[A-Z]'.'\C', '\='_' . tolower(submatch(0))', 'g')
 
-    let str = a:str
+    let word = a:word
     let action = g:operator_decamelize_all_uppercase_action
     let regex = '^[A-Z]\|[a-z]\zs[A-Z]'.'\C'
 
-    if str =~# '^[A-Z]\+$' && action ==# 'nop'
-        return str
-    elseif str =~# '^[A-Z]\+$' && action ==# 'lowercase'
-        return tolower(str)
+    if word =~# '^[A-Z]\+$' && action ==# 'nop'
+        return word
+    elseif word =~# '^[A-Z]\+$' && action ==# 'lowercase'
+        return tolower(word)
     endif
 
     while 1
-        let offset = match(str, regex)
-        let len    = strlen(matchstr(str, regex))
+        let offset = match(word, regex)
+        let len    = strlen(matchstr(word, regex))
         if offset ==# -1
             break
         endif
-        let left = offset == 0 ? '' : str[: offset - 1]
-        let middle = str[offset : offset + len - 1]
-        let right  = str[offset + len :]
-        let str = left . (offset ==# 0 ? '' : '_') . tolower(middle) . right
+        let left = offset == 0 ? '' : word[: offset - 1]
+        let middle = word[offset : offset + len - 1]
+        let right  = word[offset + len :]
+        let word = left . (offset ==# 0 ? '' : '_') . tolower(middle) . right
     endwhile
-    return str
+    return word
 endfunction "}}}
 
 function! operator#camelize#decamelize(motion_wiseness) "{{{
-    '[,']substitute/\w\+/\=s:decamelize(submatch(0))/g
+    '[,']substitute/\w\+/\=s:decamelize_word(submatch(0))/g
 endfunction "}}}
 
 
