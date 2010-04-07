@@ -73,11 +73,8 @@ function! s:operate_on_word(funcname, motion_wiseness) "{{{
     let flags = 'g'
 
     if len(lines) == 1
-        let [first_line, last_line] = [lines[0], '']
-        let middle_lines = []
-
         " First line
-        let line = substitute(first_line, pat, sub, flags)
+        let line = substitute(lines[0], pat, sub, flags)
         call setline(begin[1], firstline_noreplace . line . lastline_noreplace)
 
     elseif len(lines) == 2
@@ -93,12 +90,12 @@ function! s:operate_on_word(funcname, motion_wiseness) "{{{
     elseif len(lines) >= 3
         let [first_line, last_line] = [lines[0], lines[-1]]
         let middle_lines = lines[1:-2]
+        let lnums = (begin[1] + 1 <= end[1] - 1 ? range(begin[1] + 1, end[1] - 1) : [])
 
         " First line
         let line = substitute(first_line, pat, sub, flags)
         call setline(begin[1], firstline_noreplace . line)
         " Middle lines
-        let lnums = (begin[1] + 1 <= end[1] - 1 ? range(begin[1] + 1, end[1] - 1) : [])
         for [line, lnum] in s:zip(middle_lines, lnums)
             let line = substitute(line, pat, sub, flags)
             call setline(lnum, line)
