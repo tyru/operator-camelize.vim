@@ -20,12 +20,23 @@ License:
 ==============================================================================
 CONTENTS						*operator-camelize-contents*
 
+Introduction		|operator-camelize-introduction|
 Interface			|operator-camelize-interface|
   Keymappings		|operator-camelize-keymappings|
   Variables			|operator-camelize-variables|
 Changelog			|operator-camelize-changelog|
 
 
+==============================================================================
+INTRODUCTION						*operator-camelize-introduction* {{{
+
+*operator-replace* is a Vim plugin to provide an operator
+to camelize/decamelize a specified text.
+
+Requirements:
+- |operator-user| (vimscript#2692)
+
+}}}
 ==============================================================================
 INTERFACE				*operator-camelize-interface* {{{
 ------------------------------------------------------------------------------
