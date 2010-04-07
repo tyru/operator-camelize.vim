@@ -2,10 +2,10 @@
 scriptencoding utf-8
 
 " Load Once {{{
-if exists('g:loaded_camel') && g:loaded_camel
+if exists('g:loaded_operator_camelize') && g:loaded_operator_camelize
     finish
 endif
-let g:loaded_camel = 1
+let g:loaded_operator_camelize = 1
 " }}}
 " Saving 'cpoptions' {{{
 let s:save_cpo = &cpo
