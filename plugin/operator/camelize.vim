@@ -12,9 +12,6 @@ let s:save_cpo = &cpo
 set cpo&vim
 " }}}
 
-" nop       : Do nothing
-" lowercase : Do lower-case
-" decamelize: Do decamelize
 if !exists('g:operator_decamelize_all_uppercase_action')
     let g:operator_decamelize_all_uppercase_action = 'nop'
 endif
