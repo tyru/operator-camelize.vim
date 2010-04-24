@@ -53,7 +53,7 @@ function! s:operate_on_word(funcname, motion_wiseness) "{{{
 endfunction "}}}
 
 
-" snake_case -> SnakeCase
+" s:camelize_word('snake_case') " => 'SnakeCase'
 function! s:camelize_word(word) "{{{
     " NOTE: Nested sub-replace-expression is not recognized...omg
     " (:help sub-replace-expression)
@@ -82,7 +82,7 @@ function! operator#camelize#camelize(motion_wiseness) "{{{
 endfunction "}}}
 
 
-" CamelCase -> camel_case
+" s:decamelize_word('CamelCase') " => 'camel_case'
 function! s:decamelize_word(word) "{{{
     " NOTE: Nested sub-replace-expression is not recognized...omg
     " (:help sub-replace-expression)
