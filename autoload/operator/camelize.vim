@@ -61,7 +61,23 @@ function! s:camelize_word(word) "{{{
     " return substitute(tolower(a:word), '^[a-z]\|_\zs[a-z]'.'\C', '\=toupper(submatch(0))', 'g')
 
     let word = a:word
+    let action = g:operator_camelize_all_uppercase_action
     let regex = '^[a-z]\|_[a-z]'.'\C'
+
+    if word =~# '^[A-Z]\+$'
+        if action ==# 'nop'
+            return word
+        elseif action ==# 'lowercase'
+            return tolower(word)
+        elseif action ==# 'camelize'
+            return toupper(word[0]) . tolower(word[1:])
+        else
+            echohl WarningMsg
+            echomsg "g:operator_camelize_all_uppercase_action is invalid value '"
+            \       . g:operator_camelize_all_uppercase_action . "'."
+            echohl None
+        endif
+    endif
 
     while 1
         let offset = match(word, regex)
