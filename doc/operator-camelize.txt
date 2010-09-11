@@ -59,6 +59,16 @@ Please map yourself as follows: >
 ------------------------------------------------------------------------------
 VARIABLES					*operator-camelize-variables* {{{
 
+g:operator_camelize_all_uppercase_action		*g:operator_camelize_all_uppercase_action*
+									(Default: "nop")
+		<Plug>(operator-camelize)'s action for word whose characters are all capitals like 'CAMEL'.
+
+		e.g., {value} is "WORD"
+		option value		{value} ~
+		"nop"				"WORD"
+		"lowercase" 		"word"
+		"camelize"			"Word"
+
 g:operator_decamelize_all_uppercase_action		*g:operator_decamelize_all_uppercase_action*
 									(Default: "nop")
 		<Plug>(operator-decamelize)'s action for word whose characters are all capitals like 'CAMEL'.
