@@ -2,7 +2,7 @@
 
 Author:
   tyru <tyru.exe@gmail.com>
-Version: 0.0.1
+Version: 0.0.2
 License:
 " NEW BSD LICENSE {{{
 "   Copyright (c) 2009, tyru
@@ -87,6 +87,9 @@ CHANGELOG						*operator-camelize-changelog* {{{
 - Initial upload
 0.0.1:
 - Refactoring.
+0.0.2:
+- Implement g:operator_camelize_all_uppercase_action.
+- Fix document descriptions.
 
 }}}
 ==============================================================================
