@@ -55,7 +55,7 @@ endfunction "}}}
 
 " s:camelize_word('snake_case') " => 'SnakeCase'
 function! s:camelize_word(word) "{{{
-    " NOTE: Nested sub-replace-expression is not recognized...omg
+    " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
     "
     " return substitute(tolower(a:word), '^[a-z]\|_\zs[a-z]'.'\C', '\=toupper(submatch(0))', 'g')
@@ -84,7 +84,7 @@ endfunction "}}}
 
 " s:decamelize_word('CamelCase') " => 'camel_case'
 function! s:decamelize_word(word) "{{{
-    " NOTE: Nested sub-replace-expression is not recognized...omg
+    " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
     "
     " return substitute(a:word, '^[A-Z]\|[a-z]\zs[A-Z]'.'\C', '\='_' . tolower(submatch(0))', 'g')
