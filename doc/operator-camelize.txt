@@ -61,10 +61,13 @@ VARIABLES					*operator-camelize-variables* {{{
 
 g:operator_decamelize_all_uppercase_action		*g:operator_decamelize_all_uppercase_action*
 									(Default: "nop")
-		Action for word whose characters are all capitals like 'CAMEL'.
-		"nop"        : Do nothing
-		"lowercase"  : Do lower-case
-		"decamelize" : Do decamelize
+		<Plug>(operator-decamelize)'s action for word whose characters are all capitals like 'CAMEL'.
+
+		e.g., {value} is "WORD"
+		option value		{value} ~
+		"nop"				"WORD"
+		"lowercase" 		"word"
+		"decamelize"		"w_o_r_d"
 }}}
 }}}
 ==============================================================================
