@@ -93,10 +93,14 @@ function! s:decamelize_word(word) "{{{
     let action = g:operator_decamelize_all_uppercase_action
     let regex = '^[A-Z]\|[a-z]\zs[A-Z]'.'\C'
 
-    if word =~# '^[A-Z]\+$' && action ==# 'nop'
-        return word
-    elseif word =~# '^[A-Z]\+$' && action ==# 'lowercase'
-        return tolower(word)
+    if word =~# '^[A-Z]\+$'
+        if action ==# 'nop'
+            return word
+        elseif action ==# 'lowercase'
+            return tolower(word)
+        elseif action ==# 'decamelize'
+            " Fall through
+        endif
     endif
 
     while 1
