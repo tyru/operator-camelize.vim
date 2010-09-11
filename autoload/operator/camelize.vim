@@ -100,6 +100,11 @@ function! s:decamelize_word(word) "{{{
             return tolower(word)
         elseif action ==# 'decamelize'
             " Fall through
+        else
+            echohl WarningMsg
+            echomsg "g:operator_decamelize_all_uppercase_action is invalid value '"
+            \       . g:operator_decamelize_all_uppercase_action . "'."
+            echohl None
         endif
     endif
 
