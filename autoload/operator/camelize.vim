@@ -72,6 +72,10 @@ function! s:map_text_with_regex(text, funcname, regex) "{{{
     endwhile
     return converted_text . text
 endfunction "}}}
+function! s:camelize(word) "{{{
+    let word = a:word[0] == '_' ? a:word[1:] : a:word
+    return toupper(word[0]) . tolower(word[1:])
+endfunction "}}}
 
 
 " operator#camelize#camelize_word('snake_case')
@@ -82,17 +86,14 @@ function! operator#camelize#camelize_word(word) "{{{
     "
     " return substitute(tolower(a:word), '^[a-z]\|_\zs[a-z]'.'\C', '\=toupper(submatch(0))', 'g')
 
-    let word = a:word
-    let action = g:operator_camelize_all_uppercase_action
-    let regex = '^[a-z]\|_[a-z]'.'\C'
-
-    if word =~# '^[A-Z]\+$'
+    if a:word =~# '^[A-Z]\+$'
+        let action = g:operator_camelize_all_uppercase_action
         if action ==# 'nop'
-            return word
+            return a:word
         elseif action ==# 'lowercase'
-            return tolower(word)
+            return tolower(a:word)
         elseif action ==# 'camelize'
-            return toupper(word[0]) . tolower(word[1:])
+            return toupper(a:word[0]) . tolower(a:word[1:])
         else
             echohl WarningMsg
             echomsg "g:operator_camelize_all_uppercase_action is invalid value '"
@@ -101,20 +102,11 @@ function! operator#camelize#camelize_word(word) "{{{
         endif
     endif
 
-    while 1
-        let offset = match(word, regex)
-        let len    = strlen(matchstr(word, regex))
-        if offset ==# -1
-            break
-        endif
-
-        let left = offset == 0 ? '' : word[: offset - 1]
-        let middle = word[offset : offset + len - 1]
-        let right  = word[offset + len :]
-
-        let word = left . toupper(middle[0] == '_' ? middle[1:] : middle) . right
-    endwhile
-    return word
+    return s:map_text_with_regex(
+    \   a:word,
+    \   's:camelize',
+    \   '^[a-zA-Z0-9]\+\|_[a-zA-Z0-9]\+'.'\C'
+    \)
 endfunction "}}}
 
 " operator#camelize#camelize_text('snake_case other_text')
