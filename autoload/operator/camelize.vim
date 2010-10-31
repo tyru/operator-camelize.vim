@@ -36,7 +36,7 @@ function! s:select(motion_wiseness) "{{{
 
     execute 'silent normal!' ex
 endfunction "}}}
-function! s:operate_on_word(funcname, motion_wiseness) "{{{
+function! s:replace_range(funcname, motion_wiseness) "{{{
     " Select previously-selected range in visual mode.
     " NOTE: `normal! gv` does not work.
     call s:select(a:motion_wiseness)
@@ -47,7 +47,8 @@ function! s:operate_on_word(funcname, motion_wiseness) "{{{
     try
         " Filter selected range with `{a:funcname}(selected_text)`.
         let cut_with_reg_z = '"zc'
-        execute printf("normal! %s\<C-r>\<C-o>=%s(@z)\<CR>", cut_with_reg_z, a:funcname)
+        let replace_with_func = "\<C-r>\<C-o>=" . a:funcname . "(@z)\<CR>"
+        execute 'normal!' cut_with_reg_z . replace_with_func
     finally
         call setreg('z', reg_z_save, regtype_z_save)
     endtry
@@ -95,7 +96,7 @@ function! s:camelize_word(word) "{{{
 endfunction "}}}
 
 function! operator#camelize#camelize(motion_wiseness) "{{{
-    call s:operate_on_word('s:camelize_word', a:motion_wiseness)
+    call s:replace_range('s:camelize_word', a:motion_wiseness)
 endfunction "}}}
 
 
@@ -140,7 +141,7 @@ function! s:decamelize_word(word) "{{{
 endfunction "}}}
 
 function! operator#camelize#decamelize(motion_wiseness) "{{{
-    call s:operate_on_word('<SID>decamelize_word', a:motion_wiseness)
+    call s:replace_range('<SID>decamelize_word', a:motion_wiseness)
 endfunction "}}}
 
 
