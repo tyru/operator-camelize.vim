@@ -2,7 +2,7 @@
 
 Author:
   tyru <tyru.exe@gmail.com>
-Version: 0.0.2
+Version: 0.0.3
 License: Under the same license as Vim itself (see :help license)
 
 ==============================================================================
@@ -78,7 +78,12 @@ CHANGELOG						*operator-camelize-changelog* {{{
 0.0.2:
 - Implement g:operator_camelize_all_uppercase_action.
 - Fix document descriptions.
-
+0.0.3:
+- Fix bug: When selected in blockwise visual mode,
+  unnecessary newline is inserted at the bottom.
+- Fix bug: If there are two more than words in selected range,
+  head character is not camelized.
+- A lot of internal changes.
 }}}
 ==============================================================================
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl:noet:fdm=marker:fen
