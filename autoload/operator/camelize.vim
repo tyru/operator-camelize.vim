@@ -7,9 +7,40 @@ set cpo&vim
 " }}}
 
 
-" Select previously-selected range in visual mode.
-" NOTE: `normal! gv` does not work.
+
+function! s:map_text_with_regex(text, funcname, regex, ...) "{{{
+    let give_context = a:0 ? a:1 : 0
+    let converted_text = ''
+    let text = a:text
+    let whole_offset = 0
+    while text != ''
+        let offset = match(text, a:regex)
+        if offset ==# -1
+            break
+        endif
+        let context = {'offset': offset, 'whole_offset': whole_offset}
+        let len = strlen(matchstr(text, a:regex))
+        let whole_offset += len
+
+        let left = offset == 0 ? '' : text[: offset - 1]
+        let middle = text[offset : offset + len - 1]
+        let right  = text[offset + len :]
+
+        let converted_text .= left . call(
+        \   a:funcname,
+        \   [middle] + (give_context ? [context] : [])
+        \)
+        let text = right
+    endwhile
+    return converted_text . text
+endfunction "}}}
+
+" For operator.
 function! s:yank_range(motion_wiseness) "{{{
+    " Select previously-selected range in visual mode.
+    " NOTE: `normal! gv` does not work
+    " when user uses operator from normal mode.
+
     " From http://gist.github.com/356290
     " But specialized to operator-user.
 
@@ -62,41 +93,7 @@ function! s:replace_range(funcname, motion_wiseness) "{{{
     " Paste the text to the range.
     call s:paste_range(a:motion_wiseness, text)
 endfunction "}}}
-function! s:map_text_with_regex(text, funcname, regex, ...) "{{{
-    let give_context = a:0 ? a:1 : 0
-    let converted_text = ''
-    let text = a:text
-    let whole_offset = 0
-    while text != ''
-        let offset = match(text, a:regex)
-        if offset ==# -1
-            break
-        endif
-        let context = {'offset': offset, 'whole_offset': whole_offset}
-        let len = strlen(matchstr(text, a:regex))
-        let whole_offset += len
 
-        let left = offset == 0 ? '' : text[: offset - 1]
-        let middle = text[offset : offset + len - 1]
-        let right  = text[offset + len :]
-
-        let converted_text .= left . call(
-        \   a:funcname,
-        \   [middle] + (give_context ? [context] : [])
-        \)
-        let text = right
-    endwhile
-    return converted_text . text
-endfunction "}}}
-function! s:camelize(word) "{{{
-    let word = a:word[0] == '_' ? a:word[1:] : a:word
-    return toupper(word[0]) . tolower(word[1:])
-endfunction "}}}
-function! s:decamelize(word, context) "{{{
-    return
-    \   (a:context.whole_offset == 0 ? '' : '_')
-    \   . tolower(a:word)
-endfunction "}}}
 
 
 " operator#camelize#camelize_word('snake_case')
@@ -129,6 +126,10 @@ function! operator#camelize#camelize_word(word) "{{{
     \   '\<[a-zA-Z0-9]\+\|_[a-zA-Z0-9]\+'.'\C'
     \)
 endfunction "}}}
+function! s:camelize(word) "{{{
+    let word = a:word[0] == '_' ? a:word[1:] : a:word
+    return toupper(word[0]) . tolower(word[1:])
+endfunction "}}}
 
 " operator#camelize#camelize_text('snake_case other_text')
 " " => 'SnakeCase OtherText'
@@ -139,6 +140,7 @@ endfunction "}}}
 function! operator#camelize#op_camelize(motion_wiseness) "{{{
     call s:replace_range('operator#camelize#camelize_text', a:motion_wiseness)
 endfunction "}}}
+
 
 
 " operator#camelize#decamelize_word('CamelCase')
@@ -172,6 +174,11 @@ function! operator#camelize#decamelize_word(word) "{{{
     \   1
     \)
 endfunction "}}}
+function! s:decamelize(word, context) "{{{
+    return
+    \   (a:context.whole_offset == 0 ? '' : '_')
+    \   . tolower(a:word)
+endfunction "}}}
 
 " operator#camelize#decamelize_text('CamelCase OtherText')
 " " => 'camel_case other_text'
@@ -182,6 +189,7 @@ endfunction "}}}
 function! operator#camelize#op_decamelize(motion_wiseness) "{{{
     call s:replace_range('operator#camelize#decamelize_text', a:motion_wiseness)
 endfunction "}}}
+
 
 
 " Restore 'cpoptions' {{{
