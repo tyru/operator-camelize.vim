@@ -105,7 +105,7 @@ function! operator#camelize#camelize_word(word) "{{{
     return s:map_text_with_regex(
     \   a:word,
     \   's:camelize',
-    \   '^[a-zA-Z0-9]\+\|_[a-zA-Z0-9]\+'.'\C'
+    \   '\<[a-zA-Z0-9]\+\|_[a-zA-Z0-9]\+'.'\C'
     \)
 endfunction "}}}
 
