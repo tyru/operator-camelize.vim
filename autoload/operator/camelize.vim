@@ -83,6 +83,11 @@ function! s:camelize(word) "{{{
     let word = a:word[0] == '_' ? a:word[1:] : a:word
     return toupper(word[0]) . tolower(word[1:])
 endfunction "}}}
+function! s:decamelize(word, context) "{{{
+    return
+    \   (a:context.whole_offset == 0 ? '' : '_')
+    \   . tolower(a:word)
+endfunction "}}}
 
 
 " operator#camelize#camelize_word('snake_case')
@@ -135,15 +140,12 @@ function! operator#camelize#decamelize_word(word) "{{{
     "
     " return substitute(a:word, '^[A-Z]\|[a-z]\zs[A-Z]'.'\C', '\='_' . tolower(submatch(0))', 'g')
 
-    let word = a:word
-    let action = g:operator_decamelize_all_uppercase_action
-    let regex = '^[A-Z]\|[a-z]\zs[A-Z]'.'\C'
-
-    if word =~# '^[A-Z]\+$'
+    if a:word =~# '^[A-Z]\+$'
+        let action = g:operator_decamelize_all_uppercase_action
         if action ==# 'nop'
-            return word
+            return a:word
         elseif action ==# 'lowercase'
-            return tolower(word)
+            return tolower(a:word)
         elseif action ==# 'decamelize'
             " Fall through
         else
@@ -154,20 +156,12 @@ function! operator#camelize#decamelize_word(word) "{{{
         endif
     endif
 
-    while 1
-        let offset = match(word, regex)
-        let len    = strlen(matchstr(word, regex))
-        if offset ==# -1
-            break
-        endif
-
-        let left = offset == 0 ? '' : word[: offset - 1]
-        let middle = word[offset : offset + len - 1]
-        let right  = word[offset + len :]
-
-        let word = left . (offset ==# 0 ? '' : '_') . tolower(middle) . right
-    endwhile
-    return word
+    return s:map_text_with_regex(
+    \   a:word,
+    \   's:decamelize',
+    \   '[A-Z][a-z0-9]*'.'\C',
+    \   1
+    \)
 endfunction "}}}
 
 " operator#camelize#decamelize_text('CamelCase OtherText')
