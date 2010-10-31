@@ -38,6 +38,7 @@ function! s:select(motion_wiseness) "{{{
 endfunction "}}}
 function! s:operate_on_word(funcname, motion_wiseness) "{{{
     " Select previously-selected range in visual mode.
+    " NOTE: `normal! gv` does not work.
     call s:select(a:motion_wiseness)
 
     let reg_z_save     = getreg('z', 1)
