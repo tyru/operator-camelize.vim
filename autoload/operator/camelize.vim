@@ -55,8 +55,8 @@ function! s:replace_range(funcname, motion_wiseness) "{{{
 endfunction "}}}
 
 
-" s:camelize_word('snake_case') " => 'SnakeCase'
-function! s:camelize_word(word) "{{{
+" operator#camelize#camelize_word('snake_case') " => 'SnakeCase'
+function! operator#camelize#camelize_word(word) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
     "
@@ -96,12 +96,12 @@ function! s:camelize_word(word) "{{{
 endfunction "}}}
 
 function! operator#camelize#camelize(motion_wiseness) "{{{
-    call s:replace_range('s:camelize_word', a:motion_wiseness)
+    call s:replace_range('operator#camelize#camelize_word', a:motion_wiseness)
 endfunction "}}}
 
 
-" s:decamelize_word('CamelCase') " => 'camel_case'
-function! s:decamelize_word(word) "{{{
+" operator#camelize#decamelize_word('CamelCase') " => 'camel_case'
+function! operator#camelize#decamelize_word(word) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
     "
@@ -141,7 +141,7 @@ function! s:decamelize_word(word) "{{{
 endfunction "}}}
 
 function! operator#camelize#decamelize(motion_wiseness) "{{{
-    call s:replace_range('<SID>decamelize_word', a:motion_wiseness)
+    call s:replace_range('operator#camelize#decamelize_word', a:motion_wiseness)
 endfunction "}}}
 
 
