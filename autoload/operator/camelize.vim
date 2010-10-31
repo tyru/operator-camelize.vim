@@ -53,21 +53,28 @@ function! s:replace_range(funcname, motion_wiseness) "{{{
         call setreg('z', reg_z_save, regtype_z_save)
     endtry
 endfunction "}}}
-function! s:map_text_with_regex(text, funcname, regex) "{{{
+function! s:map_text_with_regex(text, funcname, regex, ...) "{{{
+    let give_context = a:0 ? a:1 : 0
     let converted_text = ''
     let text = a:text
+    let whole_offset = 0
     while text != ''
         let offset = match(text, a:regex)
         if offset ==# -1
             break
         endif
+        let context = {'offset': offset, 'whole_offset': whole_offset}
         let len = strlen(matchstr(text, a:regex))
+        let whole_offset += len
 
         let left = offset == 0 ? '' : text[: offset - 1]
         let middle = text[offset : offset + len - 1]
         let right  = text[offset + len :]
 
-        let converted_text .= left . {a:funcname}(middle)
+        let converted_text .= left . call(
+        \   a:funcname,
+        \   [middle] + (give_context ? [context] : [])
+        \)
         let text = right
     endwhile
     return converted_text . text
