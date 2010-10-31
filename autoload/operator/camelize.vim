@@ -7,7 +7,9 @@ set cpo&vim
 " }}}
 
 
-function! s:select(motion_wiseness) "{{{
+" Select previously-selected range in visual mode.
+" NOTE: `normal! gv` does not work.
+function! s:yank_range(motion_wiseness) "{{{
     " From http://gist.github.com/356290
     " But specialized to operator-user.
 
@@ -20,38 +22,45 @@ function! s:select(motion_wiseness) "{{{
         let regtype_save = getregtype('z')
 
         if a:motion_wiseness == 'char'
-            let ex = '`[v`]'
+            let ex = '`[v`]"zy'
         elseif a:motion_wiseness == 'line'
-            let ex = '`[V`]'
+            let ex = '`[V`]"zy'
         elseif a:motion_wiseness == 'block'
-            let ex = "`[\<C-v>`]"
+            let ex = '`[' . "\<C-v>" . '`]"zy'
         else
             " silent execute 'normal! `<' . a:motion_wiseness . '`>'
             echoerr 'internal error, sorry: this block never be reached'
         endif
+        execute 'silent normal!' ex
+        return @z
     finally
         let &l:selection = sel_save
         call setreg('z', reg_save, regtype_save)
     endtry
-
-    execute 'silent normal!' ex
 endfunction "}}}
-function! s:replace_range(funcname, motion_wiseness) "{{{
-    " Select previously-selected range in visual mode.
-    " NOTE: `normal! gv` does not work.
-    call s:select(a:motion_wiseness)
-
+function! s:convert_wiseness(motion_wiseness) "{{{
+    return get({
+    \   'char': 'v',
+    \   'line': 'V',
+    \   'block': "\<C-v>",
+    \}, a:motion_wiseness, '')
+endfunction "}}}
+function! s:paste_range(motion_wiseness, text) "{{{
     let reg_z_save     = getreg('z', 1)
     let regtype_z_save = getregtype('z')
 
     try
-        " Filter selected range with `{a:funcname}(selected_text)`.
-        let cut_with_reg_z = '"zc'
-        let replace_with_func = "\<C-r>\<C-o>=" . a:funcname . "(@z)\<CR>"
-        execute 'normal!' cut_with_reg_z . replace_with_func
+        call setreg('z', a:text, s:convert_wiseness(a:motion_wiseness))
+        silent normal! gv"zp
     finally
         call setreg('z', reg_z_save, regtype_z_save)
     endtry
+endfunction "}}}
+function! s:replace_range(funcname, motion_wiseness) "{{{
+    " Yank the range's text.
+    let text = {a:funcname}(s:yank_range(a:motion_wiseness))
+    " Paste the text to the range.
+    call s:paste_range(a:motion_wiseness, text)
 endfunction "}}}
 function! s:map_text_with_regex(text, funcname, regex, ...) "{{{
     let give_context = a:0 ? a:1 : 0
