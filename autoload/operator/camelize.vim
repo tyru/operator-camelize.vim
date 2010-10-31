@@ -53,9 +53,29 @@ function! s:replace_range(funcname, motion_wiseness) "{{{
         call setreg('z', reg_z_save, regtype_z_save)
     endtry
 endfunction "}}}
+function! s:map_text_with_regex(text, funcname, regex) "{{{
+    let converted_text = ''
+    let text = a:text
+    while text != ''
+        let offset = match(text, a:regex)
+        if offset ==# -1
+            break
+        endif
+        let len = strlen(matchstr(text, a:regex))
+
+        let left = offset == 0 ? '' : text[: offset - 1]
+        let middle = text[offset : offset + len - 1]
+        let right  = text[offset + len :]
+
+        let converted_text .= left . {a:funcname}(middle)
+        let text = right
+    endwhile
+    return converted_text . text
+endfunction "}}}
 
 
-" operator#camelize#camelize_word('snake_case') " => 'SnakeCase'
+" operator#camelize#camelize_word('snake_case')
+" " => 'SnakeCase'
 function! operator#camelize#camelize_word(word) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
@@ -87,20 +107,29 @@ function! operator#camelize#camelize_word(word) "{{{
         if offset ==# -1
             break
         endif
+
         let left = offset == 0 ? '' : word[: offset - 1]
         let middle = word[offset : offset + len - 1]
         let right  = word[offset + len :]
+
         let word = left . toupper(middle[0] == '_' ? middle[1:] : middle) . right
     endwhile
     return word
 endfunction "}}}
 
+" operator#camelize#camelize_text('snake_case other_text')
+" " => 'SnakeCase OtherText'
+function! operator#camelize#camelize_text(text) "{{{
+    return s:map_text_with_regex(a:text, 'operator#camelize#camelize_word', '\w\+')
+endfunction "}}}
+
 function! operator#camelize#camelize(motion_wiseness) "{{{
-    call s:replace_range('operator#camelize#camelize_word', a:motion_wiseness)
+    call s:replace_range('operator#camelize#camelize_text', a:motion_wiseness)
 endfunction "}}}
 
 
-" operator#camelize#decamelize_word('CamelCase') " => 'camel_case'
+" operator#camelize#decamelize_word('CamelCase')
+" " => 'camel_case'
 function! operator#camelize#decamelize_word(word) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
@@ -132,16 +161,24 @@ function! operator#camelize#decamelize_word(word) "{{{
         if offset ==# -1
             break
         endif
+
         let left = offset == 0 ? '' : word[: offset - 1]
         let middle = word[offset : offset + len - 1]
         let right  = word[offset + len :]
+
         let word = left . (offset ==# 0 ? '' : '_') . tolower(middle) . right
     endwhile
     return word
 endfunction "}}}
 
+" operator#camelize#decamelize_text('CamelCase OtherText')
+" " => 'camel_case other_text'
+function! operator#camelize#decamelize_text(text) "{{{
+    return s:map_text_with_regex(a:text, 'operator#camelize#decamelize_word', '\w\+')
+endfunction "}}}
+
 function! operator#camelize#decamelize(motion_wiseness) "{{{
-    call s:replace_range('operator#camelize#decamelize_word', a:motion_wiseness)
+    call s:replace_range('operator#camelize#decamelize_text', a:motion_wiseness)
 endfunction "}}}
 
 
