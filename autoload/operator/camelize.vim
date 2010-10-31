@@ -127,7 +127,7 @@ function! operator#camelize#camelize_text(text) "{{{
     return s:map_text_with_regex(a:text, 'operator#camelize#camelize_word', '\w\+')
 endfunction "}}}
 
-function! operator#camelize#camelize(motion_wiseness) "{{{
+function! operator#camelize#op_camelize(motion_wiseness) "{{{
     call s:replace_range('operator#camelize#camelize_text', a:motion_wiseness)
 endfunction "}}}
 
@@ -170,7 +170,7 @@ function! operator#camelize#decamelize_text(text) "{{{
     return s:map_text_with_regex(a:text, 'operator#camelize#decamelize_word', '\w\+')
 endfunction "}}}
 
-function! operator#camelize#decamelize(motion_wiseness) "{{{
+function! operator#camelize#op_decamelize(motion_wiseness) "{{{
     call s:replace_range('operator#camelize#decamelize_text', a:motion_wiseness)
 endfunction "}}}
 
