@@ -47,7 +47,7 @@ function! s:operate_on_word(funcname, motion_wiseness) "{{{
     try
         " Filter selected range with `{a:funcname}(selected_text)`.
         let cut_with_reg_z = '"zc'
-        execute printf("normal! %s\<C-r>=%s(@z)\<CR>", cut_with_reg_z, a:funcname)
+        execute printf("normal! %s\<C-r>\<C-o>=%s(@z)\<CR>", cut_with_reg_z, a:funcname)
     finally
         call setreg('z', reg_z_save, regtype_z_save)
     endtry
