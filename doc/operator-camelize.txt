@@ -18,7 +18,7 @@ Changelog			|operator-camelize-changelog|
 ==============================================================================
 INTRODUCTION						*operator-camelize-introduction* {{{
 
-*operator-replace* is a Vim plugin to provide an operator
+|operator-camelize| is a Vim plugin to provide an operator
 to camelize/decamelize a specified text.
 
 Requirements:
