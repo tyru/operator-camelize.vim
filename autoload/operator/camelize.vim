@@ -9,28 +9,26 @@ set cpo&vim
 
 
 function! s:map_text_with_regex(text, funcname, regex) "{{{
-    let converted_text = ''
     let text = a:text
-    let whole_offset = 0
+    let context = {
+    \   'converted': '',
+    \   'match': '',
+    \}
     while text != ''
         let offset = match(text, a:regex)
         if offset ==# -1
             break
         endif
-        let context = {'offset': offset, 'whole_offset': whole_offset}
-        let len = strlen(matchstr(text, a:regex))
-        let whole_offset += len
+        let len = matchend(text, a:regex)
 
-        let left = offset == 0 ? '' : text[: offset - 1]
-        let middle = text[offset : offset + len - 1]
-        let right  = text[offset + len :]
+        let left          = offset == 0 ? '' : text[: offset - 1]
+        let context.match = text[offset : offset + len - 1]
+        let right         = text[offset + len :]
 
-        let converted_text .= left . {a:funcname}(
-        \   middle, context
-        \)
+        let context.converted .= left . {a:funcname}(context)
         let text = right
     endwhile
-    return converted_text . text
+    return context.converted . text
 endfunction "}}}
 
 " For operator.
@@ -96,20 +94,22 @@ endfunction "}}}
 
 " operator#camelize#camelize_word('snake_case')
 " " => 'SnakeCase'
-function! operator#camelize#camelize_word(word, context) "{{{
+function! operator#camelize#camelize_word(context) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
     "
-    " return substitute(tolower(a:word), '^[a-z]\|_\zs[a-z]'.'\C', '\=toupper(submatch(0))', 'g')
+    " return substitute(tolower(a:context.match), '^[a-z]\|_\zs[a-z]'.'\C', '\=toupper(submatch(0))', 'g')
 
-    if a:word =~# '^[A-Z]\+$'
+    let word = a:context.match
+
+    if word =~# '^[A-Z]\+$'
         let action = g:operator_camelize_all_uppercase_action
         if action ==# 'nop'
-            return a:word
+            return word
         elseif action ==# 'lowercase'
-            return tolower(a:word)
+            return tolower(word)
         elseif action ==# 'camelize'
-            return toupper(a:word[0]) . tolower(a:word[1:])
+            return toupper(word[0]) . tolower(word[1:])
         else
             echohl WarningMsg
             echomsg "g:operator_camelize_all_uppercase_action is invalid value '"
@@ -119,13 +119,13 @@ function! operator#camelize#camelize_word(word, context) "{{{
     endif
 
     return s:map_text_with_regex(
-    \   a:word,
+    \   word,
     \   's:camelize',
     \   '\<[a-zA-Z0-9]\+\|_[a-zA-Z0-9]\+'.'\C'
     \)
 endfunction "}}}
-function! s:camelize(word, context) "{{{
-    let word = a:word[0] == '_' ? a:word[1:] : a:word
+function! s:camelize(context) "{{{
+    let word = a:context.match[0] == '_' ? a:context.match[1:] : a:context.match
     return toupper(word[0]) . tolower(word[1:])
 endfunction "}}}
 
@@ -143,18 +143,20 @@ endfunction "}}}
 
 " operator#camelize#decamelize_word('CamelCase')
 " " => 'camel_case'
-function! operator#camelize#decamelize_word(word, context) "{{{
+function! operator#camelize#decamelize_word(context) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
     "
-    " return substitute(a:word, '^[A-Z]\|[a-z]\zs[A-Z]'.'\C', '\='_' . tolower(submatch(0))', 'g')
+    " return substitute(a:context.match, '^[A-Z]\|[a-z]\zs[A-Z]'.'\C', '\='_' . tolower(submatch(0))', 'g')
 
-    if a:word =~# '^[A-Z]\+$'
+    let word = a:context.match
+
+    if word =~# '^[A-Z]\+$'
         let action = g:operator_decamelize_all_uppercase_action
         if action ==# 'nop'
-            return a:word
+            return word
         elseif action ==# 'lowercase'
-            return tolower(a:word)
+            return word
         elseif action ==# 'decamelize'
             " Fall through
         else
@@ -166,15 +168,14 @@ function! operator#camelize#decamelize_word(word, context) "{{{
     endif
 
     return s:map_text_with_regex(
-    \   a:word,
+    \   word,
     \   's:decamelize',
     \   '^[a-z0-9]\+\ze[A-Z]\|^[A-Z][a-z0-9]*'.'\C',
     \)
 endfunction "}}}
-function! s:decamelize(word, context) "{{{
-    return
-    \   (a:context.whole_offset == 0 ? '' : '_')
-    \   . tolower(a:word)
+function! s:decamelize(context) "{{{
+    return (a:context.converted ==# '' ? '' : '_')
+    \       . tolower(a:context.match)
 endfunction "}}}
 
 " operator#camelize#decamelize_text('CamelCase OtherText')
