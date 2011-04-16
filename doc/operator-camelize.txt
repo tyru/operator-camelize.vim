@@ -12,6 +12,7 @@ Introduction		|operator-camelize-introduction|
 Interface			|operator-camelize-interface|
   Keymappings		|operator-camelize-keymappings|
   Variables			|operator-camelize-variables|
+  Functions			|operator-camelize-functions|
 Changelog			|operator-camelize-changelog|
 
 
@@ -66,6 +67,15 @@ g:operator_decamelize_all_uppercase_action		*g:operator_decamelize_all_uppercase
 		"nop"				"WORD"
 		"lowercase" 		"word"
 		"decamelize"		"w_o_r_d"
+}}}
+------------------------------------------------------------------------------
+FUNCTIONS					*operator-camelize-functions* {{{
+
+				*operator#camelize#load()*
+operator#camelize#load()
+	Load autoload/operator/camelize.vim
+	and plugin/operator/camelize.vim .
+
 }}}
 }}}
 ==============================================================================
