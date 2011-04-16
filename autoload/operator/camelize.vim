@@ -8,6 +8,12 @@ set cpo&vim
 
 
 
+function! operator#camelize#load() "{{{
+    runtime! plugin/operator/camelize.vim
+endfunction "}}}
+
+
+
 " Utilities
 function! s:map_text_with_regex(text, funcname, regex) "{{{
     let text = a:text
