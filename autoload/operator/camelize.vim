@@ -8,8 +8,7 @@ set cpo&vim
 
 
 
-function! s:map_text_with_regex(text, funcname, regex, ...) "{{{
-    let give_context = a:0 ? a:1 : 0
+function! s:map_text_with_regex(text, funcname, regex) "{{{
     let converted_text = ''
     let text = a:text
     let whole_offset = 0
@@ -26,9 +25,8 @@ function! s:map_text_with_regex(text, funcname, regex, ...) "{{{
         let middle = text[offset : offset + len - 1]
         let right  = text[offset + len :]
 
-        let converted_text .= left . call(
-        \   a:funcname,
-        \   [middle] + (give_context ? [context] : [])
+        let converted_text .= left . {a:funcname}(
+        \   middle, context
         \)
         let text = right
     endwhile
@@ -98,7 +96,7 @@ endfunction "}}}
 
 " operator#camelize#camelize_word('snake_case')
 " " => 'SnakeCase'
-function! operator#camelize#camelize_word(word) "{{{
+function! operator#camelize#camelize_word(word, context) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
     "
@@ -126,7 +124,7 @@ function! operator#camelize#camelize_word(word) "{{{
     \   '\<[a-zA-Z0-9]\+\|_[a-zA-Z0-9]\+'.'\C'
     \)
 endfunction "}}}
-function! s:camelize(word) "{{{
+function! s:camelize(word, context) "{{{
     let word = a:word[0] == '_' ? a:word[1:] : a:word
     return toupper(word[0]) . tolower(word[1:])
 endfunction "}}}
@@ -145,7 +143,7 @@ endfunction "}}}
 
 " operator#camelize#decamelize_word('CamelCase')
 " " => 'camel_case'
-function! operator#camelize#decamelize_word(word) "{{{
+function! operator#camelize#decamelize_word(word, context) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
     "
@@ -171,7 +169,6 @@ function! operator#camelize#decamelize_word(word) "{{{
     \   a:word,
     \   's:decamelize',
     \   '[A-Z][a-z0-9]*'.'\C',
-    \   1
     \)
 endfunction "}}}
 function! s:decamelize(word, context) "{{{
