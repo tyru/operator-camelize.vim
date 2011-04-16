@@ -58,7 +58,7 @@ function! s:run() "{{{
     \   'snake => Snake'
 
 
-    " Decamelize
+    " Decamelize (PascalCase)
     let r = s:call_local(sid, 'decamelize_text', ['CamelCase OtherText'])
     Is
     \   r,
@@ -82,6 +82,32 @@ function! s:run() "{{{
     \   r,
     \   '_snake',
     \   '(Hoge)Snake => (hoge)_snake'
+
+
+    " Decamelize (CamelCase)
+    let r = s:call_local(sid, 'decamelize_text', ['camelCase otherText'])
+    Is
+    \   r,
+    \   'camel_case other_text',
+    \   'camelCase otherText => camel_case other_text'
+
+    let r = s:call_local(sid, 'decamelize_word', [{'match': 'camelCase'}])
+    Is
+    \   r,
+    \   'camel_case',
+    \   'camelCase => camel_case'
+
+    let r = s:call_local(sid, 'decamelize_atom', [{'match': 'snake', 'converted': ''}])
+    Is
+    \   r,
+    \   'snake',
+    \   'snake(...) => snake(...)'
+
+    let r = s:call_local(sid, 'decamelize_atom', [{'match': 'Snake', 'converted': 'hoge'}])
+    Is
+    \   r,
+    \   '_snake',
+    \   '(hoge)Snake => (hoge)_snake'
 endfunction "}}}
 
 call s:run()
