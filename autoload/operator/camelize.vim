@@ -168,7 +168,7 @@ function! operator#camelize#decamelize_word(word, context) "{{{
     return s:map_text_with_regex(
     \   a:word,
     \   's:decamelize',
-    \   '[A-Z][a-z0-9]*'.'\C',
+    \   '^[a-z0-9]\+\ze[A-Z]\|^[A-Z][a-z0-9]*'.'\C',
     \)
 endfunction "}}}
 function! s:decamelize(word, context) "{{{
