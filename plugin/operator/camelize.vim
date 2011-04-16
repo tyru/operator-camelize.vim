@@ -19,8 +19,8 @@ if !exists('g:operator_camelize_all_uppercase_action')
     let g:operator_camelize_all_uppercase_action = 'nop'
 endif
 
-call operator#user#define('camelize', 'operator#camelize#op_camelize')
-call operator#user#define('decamelize', 'operator#camelize#op_decamelize')
+call operator#user#define('camelize', 'operator#camelize#camelize')
+call operator#user#define('decamelize', 'operator#camelize#decamelize')
 
 
 " Restore 'cpoptions' {{{

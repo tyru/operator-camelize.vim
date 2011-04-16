@@ -8,6 +8,7 @@ set cpo&vim
 
 
 
+" Utilities
 function! s:map_text_with_regex(text, funcname, regex) "{{{
     let text = a:text
     let context = {
@@ -31,7 +32,7 @@ function! s:map_text_with_regex(text, funcname, regex) "{{{
     return context.converted . text
 endfunction "}}}
 
-" For operator.
+" Utilities for operator
 function! s:yank_range(motion_wiseness) "{{{
     " Select previously-selected range in visual mode.
     " NOTE: `normal! gv` does not work
@@ -92,9 +93,16 @@ endfunction "}}}
 
 
 
-" operator#camelize#camelize_word('snake_case')
-" " => 'SnakeCase'
-function! operator#camelize#camelize_word(context) "{{{
+" For a atom
+" e.g.: 'snake'
+function! s:camelize_atom(context) "{{{
+    let word = a:context.match[0] == '_' ? a:context.match[1:] : a:context.match
+    return toupper(word[0]) . tolower(word[1:])
+endfunction "}}}
+
+" For a word
+" e.g.: 'snake_case'
+function! s:camelize_word(context) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
     "
@@ -120,30 +128,34 @@ function! operator#camelize#camelize_word(context) "{{{
 
     return s:map_text_with_regex(
     \   word,
-    \   's:camelize',
+    \   's:camelize_atom',
     \   '\<[a-zA-Z0-9]\+\|_[a-zA-Z0-9]\+'.'\C'
     \)
 endfunction "}}}
-function! s:camelize(context) "{{{
-    let word = a:context.match[0] == '_' ? a:context.match[1:] : a:context.match
-    return toupper(word[0]) . tolower(word[1:])
+
+" For a text
+" e.g.: 'snake_case other_text'
+function! s:camelize_text(text) "{{{
+    return s:map_text_with_regex(a:text, 's:camelize_word', '\w\+')
 endfunction "}}}
 
-" operator#camelize#camelize_text('snake_case other_text')
-" " => 'SnakeCase OtherText'
-function! operator#camelize#camelize_text(text) "{{{
-    return s:map_text_with_regex(a:text, 'operator#camelize#camelize_word', '\w\+')
-endfunction "}}}
-
-function! operator#camelize#op_camelize(motion_wiseness) "{{{
-    call s:replace_range('operator#camelize#camelize_text', a:motion_wiseness)
+" For <Plug>(operator-camelize)
+function! operator#camelize#camelize(motion_wiseness) "{{{
+    call s:replace_range('s:camelize_text', a:motion_wiseness)
 endfunction "}}}
 
 
 
-" operator#camelize#decamelize_word('CamelCase')
-" " => 'camel_case'
-function! operator#camelize#decamelize_word(context) "{{{
+" For a atom
+" e.g.: 'Snake'
+function! s:decamelize_atom(context) "{{{
+    return (a:context.converted ==# '' ? '' : '_')
+    \       . tolower(a:context.match)
+endfunction "}}}
+
+" For a word
+" e.g.: 'SnakeCase'
+function! s:decamelize_word(context) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
     "
@@ -169,23 +181,20 @@ function! operator#camelize#decamelize_word(context) "{{{
 
     return s:map_text_with_regex(
     \   word,
-    \   's:decamelize',
+    \   's:decamelize_atom',
     \   '^[a-z0-9]\+\ze[A-Z]\|^[A-Z][a-z0-9]*'.'\C',
     \)
 endfunction "}}}
-function! s:decamelize(context) "{{{
-    return (a:context.converted ==# '' ? '' : '_')
-    \       . tolower(a:context.match)
+
+" For a text
+" e.g.: 'SnakeCase OtherText'
+function! s:decamelize_text(text) "{{{
+    return s:map_text_with_regex(a:text, 's:decamelize_word', '\w\+')
 endfunction "}}}
 
-" operator#camelize#decamelize_text('CamelCase OtherText')
-" " => 'camel_case other_text'
-function! operator#camelize#decamelize_text(text) "{{{
-    return s:map_text_with_regex(a:text, 'operator#camelize#decamelize_word', '\w\+')
-endfunction "}}}
-
-function! operator#camelize#op_decamelize(motion_wiseness) "{{{
-    call s:replace_range('operator#camelize#decamelize_text', a:motion_wiseness)
+" For <Plug>(operator-decamelize)
+function! operator#camelize#decamelize(motion_wiseness) "{{{
+    call s:replace_range('s:decamelize_text', a:motion_wiseness)
 endfunction "}}}
 
 
