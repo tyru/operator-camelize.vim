@@ -72,19 +72,13 @@ function! s:yank_range(motion_wiseness) "{{{
         call setreg('z', reg_save, regtype_save)
     endtry
 endfunction "}}}
-function! s:convert_wiseness(motion_wiseness) "{{{
-    return get({
-    \   'char': 'v',
-    \   'line': 'V',
-    \   'block': "\<C-v>",
-    \}, a:motion_wiseness, '')
-endfunction "}}}
 function! s:paste_range(motion_wiseness, text) "{{{
     let reg_z_save     = getreg('z', 1)
     let regtype_z_save = getregtype('z')
 
     try
-        call setreg('z', a:text, s:convert_wiseness(a:motion_wiseness))
+        call setreg('z', a:text,
+        \   operator#user#visual_command_from_wise_name(a:motion_wiseness))
         silent normal! gv"zp
     finally
         call setreg('z', reg_z_save, regtype_z_save)
