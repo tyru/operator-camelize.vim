@@ -207,7 +207,7 @@ endfunction "}}}
 " e.g.: 'camelCase_' => false
 " e.g.: 'CamelCase_' => false
 function! s:is_camelized(word) "{{{
-    return a:word =~# '^[A-Z][A-Za-z0-9]\+$'
+    return a:word =~# '^[A-Za-z][A-Za-z0-9]\+$'
 endfunction "}}}
 
 " For a word
