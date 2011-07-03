@@ -199,6 +199,37 @@ endfunction "}}}
 
 
 
+" Returns true when a:word is camelized.
+" Returns false otherwise.
+function! s:is_camelized(word) "{{{
+    return a:word =~# '^[A-Z][A-Za-z0-9]\+$'
+endfunction "}}}
+
+" For a word
+" e.g.: 'SnakeCase' => 'snake_case'
+" e.g.: 'snake_case' => 'SnakeCase'
+function! s:toggle_word(context) "{{{
+    if s:is_camelized(a:context.match)
+        return s:decamelize_word(a:context)
+    else
+        return s:camelize_word(a:context)
+    endif
+endfunction "}}}
+
+" For a text
+" e.g.: 'SnakeCase OtherText' => 'snake_case other_text'
+" e.g.: 'snake_case other_text' => 'SnakeCase OtherText'
+function! s:toggle_text(text) "{{{
+    return s:map_text_with_regex(a:text, 's:toggle_word', '\w\+')
+endfunction "}}}
+
+" For <Plug>(operator-camelize-toggle)
+function! operator#camelize#camelize_toggle(motion_wiseness) "{{{
+    call s:replace_range('s:toggle_text', a:motion_wiseness)
+endfunction "}}}
+
+
+
 " Restore 'cpoptions' {{{
 let &cpo = s:save_cpo
 " }}}

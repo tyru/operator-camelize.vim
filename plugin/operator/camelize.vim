@@ -21,6 +21,7 @@ endif
 
 call operator#user#define('camelize', 'operator#camelize#camelize')
 call operator#user#define('decamelize', 'operator#camelize#decamelize')
+call operator#user#define('camelize-toggle', 'operator#camelize#camelize_toggle')
 
 
 " Restore 'cpoptions' {{{
