@@ -108,6 +108,16 @@ function! s:run() "{{{
     \   r,
     \   '_snake',
     \   '(hoge)Snake => (hoge)_snake'
+
+
+    for t in ['CamelCase', 'camelCase']
+        let r = s:call_local(sid, 'is_camelized', [t])
+        OK r, 's:is_camelized('.string(t).') => true'
+    endfor
+    for t in ['snake_case', 'camelCase_', 'CamelCase_']
+        let r = s:call_local(sid, 'is_camelized', [t])
+        OK !r, 's:is_camelized('.string(t).') => false'
+    endfor
 endfunction "}}}
 
 call s:run()
