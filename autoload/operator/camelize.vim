@@ -206,8 +206,13 @@ endfunction "}}}
 " e.g.: 'snake_case' => false
 " e.g.: 'camelCase_' => false
 " e.g.: 'CamelCase_' => false
+" e.g.: 'vim' => false
 function! s:is_camelized(word) "{{{
-    return a:word =~# '^[A-Za-z][A-Za-z0-9]\+$'
+    " upper camel case: e.g., 'CamelCase'
+    if a:word =~# '^[A-Z][A-Za-z0-9]\+$' | return 1 | endif
+    " lower camel case: e.g., 'camelCase'
+    if a:word =~# '^[a-z][A-Za-z0-9]*[A-Z]\+[A-Za-z0-9]*$' | return 1 | endif
+    return 0
 endfunction "}}}
 
 " For a word

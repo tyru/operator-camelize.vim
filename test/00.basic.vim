@@ -114,7 +114,7 @@ function! s:run() "{{{
         let r = s:call_local(sid, 'is_camelized', [t])
         OK r, 's:is_camelized('.string(t).') => true'
     endfor
-    for t in ['snake_case', 'camelCase_', 'CamelCase_']
+    for t in ['snake_case', 'camelCase_', 'CamelCase_', 'vim']
         let r = s:call_local(sid, 'is_camelized', [t])
         OK !r, 's:is_camelized('.string(t).') => false'
     endfor
