@@ -94,14 +94,14 @@ endfunction "}}}
 
 
 " For a atom
-" e.g.: 'snake'
+" e.g.: 'snake' => 'Snake'
 function! s:camelize_atom(context) "{{{
     let word = a:context.match[0] == '_' ? a:context.match[1:] : a:context.match
     return toupper(word[0]) . tolower(word[1:])
 endfunction "}}}
 
 " For a word
-" e.g.: 'snake_case'
+" e.g.: 'snake_case' => 'SnakeCase'
 function! s:camelize_word(context) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
@@ -134,7 +134,7 @@ function! s:camelize_word(context) "{{{
 endfunction "}}}
 
 " For a text
-" e.g.: 'snake_case other_text'
+" e.g.: 'snake_case other_text' => 'SnakeCase OtherText'
 function! s:camelize_text(text) "{{{
     return s:map_text_with_regex(a:text, 's:camelize_word', '\w\+')
 endfunction "}}}
@@ -147,14 +147,14 @@ endfunction "}}}
 
 
 " For a atom
-" e.g.: 'Snake'
+" e.g.: 'Snake' => 'snake'
 function! s:decamelize_atom(context) "{{{
     return (a:context.converted ==# '' ? '' : '_')
     \       . tolower(a:context.match)
 endfunction "}}}
 
 " For a word
-" e.g.: 'SnakeCase'
+" e.g.: 'SnakeCase' => 'snake_case'
 function! s:decamelize_word(context) "{{{
     " NOTE: Nested sub-replace-expression can't work...omg
     " (:help sub-replace-expression)
@@ -187,7 +187,7 @@ function! s:decamelize_word(context) "{{{
 endfunction "}}}
 
 " For a text
-" e.g.: 'SnakeCase OtherText'
+" e.g.: 'SnakeCase OtherText' => 'snake_case other_text'
 function! s:decamelize_text(text) "{{{
     return s:map_text_with_regex(a:text, 's:decamelize_word', '\w\+')
 endfunction "}}}
