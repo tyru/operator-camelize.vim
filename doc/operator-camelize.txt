@@ -2,7 +2,7 @@
 
 Author:
   tyru <tyru.exe@gmail.com>
-Version: 0.0.5
+Version: 0.0.5a
 License: Under the same license as Vim itself (see :help license)
 
 ==============================================================================
@@ -104,6 +104,8 @@ CHANGELOG						*operator-camelize-changelog* {{{
 - Add operator#camelize#load().
 0.0.5:
 - Add <Plug>(operator-camelize-toggle)
+0.0.5a:
+- Fix problem that it evaluates lower camelcase as snakecase. (e.g., camelCase).
 
 }}}
 ==============================================================================
