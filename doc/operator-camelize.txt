@@ -37,6 +37,10 @@ KEYMAPPINGS					*operator-camelize-keymappings* {{{
 <Plug>(operator-decamelize)
 	Do decamelize.
 
+<Plug>(operator-camelize-toggle)
+	Do decamelize if a word is camelized.
+	Do camelize otherwise.
+
 
 No default keymappings.
 Please map yourself as follows: >
