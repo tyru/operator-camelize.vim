@@ -2,7 +2,7 @@
 
 Author:
   tyru <tyru.exe@gmail.com>
-Version: 0.0.4
+Version: 0.0.5
 License: Under the same license as Vim itself (see :help license)
 
 ==============================================================================
@@ -102,6 +102,9 @@ CHANGELOG						*operator-camelize-changelog* {{{
 - Fix doc: operator-replace => operator-camelize (thanks thinca for reporting)
 - Support camelCase. not only PascalCase. (thanks thinca for reporting)
 - Add operator#camelize#load().
+0.0.5:
+- Add <Plug>(operator-camelize-toggle)
+
 }}}
 ==============================================================================
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl:noet:fdm=marker:fen
