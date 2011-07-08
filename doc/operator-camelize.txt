@@ -2,7 +2,7 @@
 
 Author:
   tyru <tyru.exe@gmail.com>
-Version: 0.0.5a
+Version: 0.0.6
 License: Under the same license as Vim itself (see :help license)
 
 ==============================================================================
@@ -115,6 +115,10 @@ CHANGELOG						*operator-camelize-changelog* {{{
 - Add <Plug>(operator-camelize-toggle)
 0.0.5a:
 - Fix problem that it evaluates lower camelcase as snakecase. (e.g., camelCase).
+0.0.6:
+- Fix problem that "vim" is recognized as the camelized word.
+- Deprecate g:operator_camelize_all_uppercase_action = "decamelize"
+- Add variable g:operator_camelize_detect_function.
 
 }}}
 ==============================================================================
