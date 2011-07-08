@@ -79,6 +79,10 @@ operator#camelize#load()
 	Load autoload/operator/camelize.vim
 	and plugin/operator/camelize.vim .
 
+operator#camelize#is_camelized({word})
+	Return true if {word} is camelized.
+	Return false otherwise.
+
 }}}
 }}}
 ==============================================================================
