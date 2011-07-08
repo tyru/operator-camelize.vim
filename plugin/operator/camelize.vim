@@ -22,9 +22,9 @@ if !exists('g:operator_camelize_detect_function')
     let g:operator_camelize_detect_function = 'operator#camelize#is_camelized'
 endif
 
-call operator#user#define('camelize', 'operator#camelize#camelize')
-call operator#user#define('decamelize', 'operator#camelize#decamelize')
-call operator#user#define('camelize-toggle', 'operator#camelize#camelize_toggle')
+call operator#user#define('camelize', 'operator#camelize#op_camelize')
+call operator#user#define('decamelize', 'operator#camelize#op_decamelize')
+call operator#user#define('camelize-toggle', 'operator#camelize#op_camelize_toggle')
 
 
 " Restore 'cpoptions' {{{

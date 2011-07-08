@@ -139,7 +139,7 @@ function! s:camelize_word(context) "{{{
 endfunction "}}}
 
 " For <Plug>(operator-camelize)
-function! operator#camelize#camelize(motion_wiseness) "{{{
+function! operator#camelize#op_camelize(motion_wiseness) "{{{
     call s:replace_range('s:camelize_word', '\w\+', a:motion_wiseness)
 endfunction "}}}
 
@@ -186,7 +186,7 @@ function! s:decamelize_word(context) "{{{
 endfunction "}}}
 
 " For <Plug>(operator-decamelize)
-function! operator#camelize#decamelize(motion_wiseness) "{{{
+function! operator#camelize#op_decamelize(motion_wiseness) "{{{
     call s:replace_range('s:decamelize_word', '\w\+', a:motion_wiseness)
 endfunction "}}}
 
@@ -221,7 +221,7 @@ function! s:toggle_word(context) "{{{
 endfunction "}}}
 
 " For <Plug>(operator-camelize-toggle)
-function! operator#camelize#camelize_toggle(motion_wiseness) "{{{
+function! operator#camelize#op_camelize_toggle(motion_wiseness) "{{{
     call s:replace_range('s:toggle_word', '\w\+', a:motion_wiseness)
 endfunction "}}}
 
