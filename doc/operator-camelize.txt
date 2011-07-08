@@ -70,7 +70,6 @@ g:operator_decamelize_all_uppercase_action		*g:operator_decamelize_all_uppercase
 		option value		{value} ~
 		"nop"				"WORD"
 		"lowercase" 		"word"
-		"decamelize"		"w_o_r_d"
 }}}
 ------------------------------------------------------------------------------
 FUNCTIONS					*operator-camelize-functions* {{{

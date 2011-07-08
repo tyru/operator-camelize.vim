@@ -174,9 +174,6 @@ function! s:decamelize_word(context) "{{{
         elseif action ==# 'lowercase'
             " "WORD" => "word"
             return word
-        elseif action ==# 'decamelize'
-            " "WORD" => "w_o_r_d"
-            " Fall through
         else
             echohl WarningMsg
             echomsg "g:operator_decamelize_all_uppercase_action is invalid value '"
