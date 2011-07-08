@@ -84,9 +84,11 @@ function! s:paste_range(motion_wiseness, text) "{{{
         call setreg('z', reg_z_save, regtype_z_save)
     endtry
 endfunction "}}}
-function! s:replace_range(funcname, motion_wiseness) "{{{
-    " Yank the range's text.
-    let text = {a:funcname}(s:yank_range(a:motion_wiseness))
+function! s:replace_range(funcname, pattern, motion_wiseness) "{{{
+    " Yank the text in the range given by a:motion_wiseness.
+    let text = s:yank_range(a:motion_wiseness)
+    " Convert the text.
+    let text = s:map_text_with_regex(text, a:funcname, a:pattern)
     " Paste the text to the range.
     call s:paste_range(a:motion_wiseness, text)
 endfunction "}}}
@@ -136,15 +138,9 @@ function! s:camelize_word(context) "{{{
     \)
 endfunction "}}}
 
-" For a text
-" e.g.: 'snake_case other_text' => 'SnakeCase OtherText'
-function! s:camelize_text(text) "{{{
-    return s:map_text_with_regex(a:text, 's:camelize_word', '\w\+')
-endfunction "}}}
-
 " For <Plug>(operator-camelize)
 function! operator#camelize#camelize(motion_wiseness) "{{{
-    call s:replace_range('s:camelize_text', a:motion_wiseness)
+    call s:replace_range('s:camelize_word', '\w\+', a:motion_wiseness)
 endfunction "}}}
 
 
@@ -189,15 +185,9 @@ function! s:decamelize_word(context) "{{{
     \)
 endfunction "}}}
 
-" For a text
-" e.g.: 'SnakeCase OtherText' => 'snake_case other_text'
-function! s:decamelize_text(text) "{{{
-    return s:map_text_with_regex(a:text, 's:decamelize_word', '\w\+')
-endfunction "}}}
-
 " For <Plug>(operator-decamelize)
 function! operator#camelize#decamelize(motion_wiseness) "{{{
-    call s:replace_range('s:decamelize_text', a:motion_wiseness)
+    call s:replace_range('s:decamelize_word', '\w\+', a:motion_wiseness)
 endfunction "}}}
 
 
@@ -229,16 +219,9 @@ function! s:toggle_word(context) "{{{
     endif
 endfunction "}}}
 
-" For a text
-" e.g.: 'SnakeCase OtherText' => 'snake_case other_text'
-" e.g.: 'snake_case other_text' => 'SnakeCase OtherText'
-function! s:toggle_text(text) "{{{
-    return s:map_text_with_regex(a:text, 's:toggle_word', '\w\+')
-endfunction "}}}
-
 " For <Plug>(operator-camelize-toggle)
 function! operator#camelize#camelize_toggle(motion_wiseness) "{{{
-    call s:replace_range('s:toggle_text', a:motion_wiseness)
+    call s:replace_range('s:toggle_word', '\w\+', a:motion_wiseness)
 endfunction "}}}
 
 
