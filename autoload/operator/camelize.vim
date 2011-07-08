@@ -212,7 +212,8 @@ endfunction "}}}
 " e.g.: 'SnakeCase' => 'snake_case'
 " e.g.: 'snake_case' => 'SnakeCase'
 function! s:toggle_word(context) "{{{
-    if operator#camelize#is_camelized(a:context.match)
+    let camelized = g:operator_camelize_detect_function
+    if {camelized}(a:context.match)
         return s:decamelize_word(a:context)
     else
         return s:camelize_word(a:context)

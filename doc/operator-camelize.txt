@@ -70,6 +70,12 @@ g:operator_decamelize_all_uppercase_action		*g:operator_decamelize_all_uppercase
 		option value		{value} ~
 		"nop"				"WORD"
 		"lowercase" 		"word"
+
+g:operator_camelize_detect_function		*g:operator_camelize_detect_function*
+									(Default: "operator#camelize#is_camelized")
+	Specify the function to detect
+	if a argument {word} is camelized, or not.
+
 }}}
 ------------------------------------------------------------------------------
 FUNCTIONS					*operator-camelize-functions* {{{
