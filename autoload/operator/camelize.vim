@@ -113,10 +113,13 @@ function! s:camelize_word(context) "{{{
     if word =~# '^[A-Z]\+$'
         let action = g:operator_camelize_all_uppercase_action
         if action ==# 'nop'
+            " "WORD" => "WORD"
             return word
         elseif action ==# 'lowercase'
+            " "WORD" => "word"
             return tolower(word)
         elseif action ==# 'camelize'
+            " "WORD" => "Word"
             return toupper(word[0]) . tolower(word[1:])
         else
             echohl WarningMsg
@@ -166,10 +169,13 @@ function! s:decamelize_word(context) "{{{
     if word =~# '^[A-Z]\+$'
         let action = g:operator_decamelize_all_uppercase_action
         if action ==# 'nop'
+            " "WORD" => "WORD"
             return word
         elseif action ==# 'lowercase'
+            " "WORD" => "word"
             return word
         elseif action ==# 'decamelize'
+            " "WORD" => "w_o_r_d"
             " Fall through
         else
             echohl WarningMsg
