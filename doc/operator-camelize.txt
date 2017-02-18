@@ -1,4 +1,4 @@
-*operator-camelize.txt* *operator-camelize*
+*operator-camelize.txt*
 
 Author:
   tyru <tyru.exe@gmail.com>
